@@ -15,8 +15,36 @@ app.use(bodyParser.urlencoded({ extended: true }));
  */
 app.post('/songs', function (req, res) {
   var song = req.body;
-  songs.push(song);
-  res.sendStatus(200);
+  var songMatch;
+  var emptyField;
+  //object is being sent over from clietn side
+  console.log("the song is",song.title);
+  console.log(song.artist);
+
+  if(song.title === ''|| song.artist === ''){
+    var emptyField = true;
+    res.sendStatus(400);
+    //400 means error
+  }
+  for(var idx =0;idx < songs.length;idx++){
+    if (song.title === songs[idx].title && song.artist === songs[idx].artist){
+      songMatch = true;
+      res.sendStatus(400);
+    }
+  }
+  if(songMatch === true || emptyField === true){
+    res.sendStatus(400);
+    // res.sendStatus(200);
+  }
+  else{
+    var d = new Date();
+    var dateAdded = (d.getMonth() + 1) + '-' + (d.getDate()) + '-' + d.getFullYear();
+    console.log(dateAdded);
+    song.dateAdded = dateAdded;
+    songs.push(song);
+    console.log("hello");
+    res.sendStatus(200);
+  }
 });
 
 app.get('/songs', function (req, res) {
